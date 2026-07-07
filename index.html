@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSE Portfolio Dashboard — 12 Companies</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#faf9f5;--surface:#ffffff;--surface1:#f2f1ea;--text:#1a1a19;--text2:#52514e;--muted:#898781;
+  --border:rgba(11,11,11,.10);--green:#0ca30c;--greenbg:#eaf3de;--red:#d03b3b;--redbg:#fcebeb;
+  --amber:#eda100;--accent:#2a78d6;--radius:8px;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#1a1a19;--surface:#242423;--surface1:#2c2c2a;--text:#f5f5f0;--text2:#c3c2b7;--muted:#8f8e88;
+  --border:rgba(255,255,255,.12);--greenbg:#1c3010;--redbg:#3a1212;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.6;padding:24px}
+.wrap{max-width:960px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin:0 0 4px}
+.sub{color:var(--text2);font-size:13px;margin:0 0 20px}
+.chips{display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap}
+.chip{border:.5px solid var(--border);background:var(--surface);color:var(--text2);border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer}
+.chip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 22px}
+.card{background:var(--surface1);border-radius:var(--radius);padding:14px 16px}
+.card .lbl{font-size:12px;color:var(--muted);margin:0 0 4px}
+.card .val{font-size:26px;font-weight:500}
+.panel{background:var(--surface);border:.5px solid var(--border);border-radius:12px;padding:16px 18px;margin:0 0 20px}
+.panel h2{font-size:15px;font-weight:500;margin:0 0 2px}
+.panel .h-sub{font-size:12px;color:var(--muted);margin:0 0 12px}
+.chartbox{position:relative;width:100%}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:7px 8px;text-align:right;border-bottom:.5px solid var(--border);white-space:nowrap}
+th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+th{color:var(--muted);font-weight:500;font-size:11.5px}
+tbody tr:hover{background:var(--surface1)}
+.badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:12px;font-weight:500}
+.b-q{background:var(--greenbg);color:var(--green)}
+.b-f{background:var(--redbg);color:var(--red)}
+.fail-cell{color:var(--red)}
+.pass-cell{color:var(--green)}
+.warn-cell{color:var(--amber)}
+.note{font-size:12px;color:var(--text2);margin:14px 0 0}
+.matrix{font-size:12px}
+.matrix td,.matrix th{text-align:center;padding:6px 7px}
+.matrix td:first-child,.matrix th:first-child,.matrix td:nth-child(2),.matrix th:nth-child(2){text-align:left}
+.mx{display:inline-block;font-weight:600}
+.constraint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 14px}
+.cbox{background:var(--surface1);border-radius:var(--radius);padding:12px 14px}
+.cbox .lbl{font-size:12px;color:var(--muted);margin:0 0 4px}
+.cbox .val{font-size:20px;font-weight:500}
+.cbox.ok .val{color:var(--green)}
+.cbox.bad .val{color:var(--red)}
+.freshness{font-size:12px;color:var(--text2);background:var(--surface1);border-radius:var(--radius);padding:10px 14px;margin:0 0 18px}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--text2);margin:0 0 10px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.lockscreen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
+.lockbox{text-align:center}
+.lockbox input{padding:9px 12px;border-radius:8px;border:1px solid var(--border);font-size:14px;background:var(--surface);color:var(--text)}
+.lockbox button{padding:9px 16px;border-radius:8px;border:none;background:var(--text);color:var(--bg);margin-left:8px;cursor:pointer;font-size:14px}
+.lockbox p{margin:0 0 10px;font-size:13px;color:var(--text2)}
+.lockerr{color:var(--red);font-size:12px;margin-top:10px;visibility:hidden}
+</style>
+</head>
+<body>
+<div class="lockscreen" id="lockscreen">
+  <div class="lockbox">
+    <p>Enter password</p>
+    <input id="lockpw" type="password" autocomplete="off" />
+    <button id="lockbtn">Unlock</button>
+    <p class="lockerr" id="lockerr">Incorrect password</p>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='cse_dash_unlocked', PW='0520MyCSE';
+  if(localStorage.getItem(KEY)==='1'){document.getElementById('lockscreen').remove();return;}
+  function check(){
+    if(document.getElementById('lockpw').value===PW){
+      localStorage.setItem(KEY,'1');
+      document.getElementById('lockscreen').remove();
+    } else {
+      document.getElementById('lockerr').style.visibility='visible';
+    }
+  }
+  document.getElementById('lockbtn').addEventListener('click',check);
+  document.getElementById('lockpw').addEventListener('keydown',function(e){if(e.key==='Enter')check();});
+})();
+</script>
+<div class="wrap">
+  <h1>CSE portfolio dashboard</h1>
+  <p class="sub">12 companies · live PE/EPS/DPS from stockanalysis.com (S&amp;P Global data, ~Jul 2026) · 10-yr ROE &amp; growth from your Company Analysis. Criteria: profit &gt;2x, revenue &gt;2x, PE &lt;11, PBV &lt;1.5, ROE+DY &gt;16% (SPEN exempt).</p>
+  <p class="freshness" id="freshness"></p>
+
+  <div class="chips" id="chips">
+    <div class="chip on" data-f="all">All 12</div>
+    <div class="chip" data-f="q">Qualifies</div>
+    <div class="chip" data-f="f">Fails criteria</div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="panel">
+    <h2>Criteria matrix</h2>
+    <p class="h-sub">Each company against the section&nbsp;4 screening criteria. <span class="warn-cell">Amber</span> = passes overall but PE/PBV sits above its GICS sector figure (exception clause still allows it).</p>
+    <div style="overflow-x:auto">
+      <table class="matrix" id="matrixTbl">
+        <thead><tr>
+          <th>Ticker</th><th>Company</th><th>Sector</th>
+          <th>Profit &gt;2x</th><th>Revenue &gt;2x</th><th>PE &lt;11</th><th>PBV &lt;1.5</th><th>ROE+DY &gt;16%</th>
+          <th>Below mkt PE/PBV</th><th>Below sector PE/PBV</th><th>Verdict</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Portfolio constraints</h2>
+    <p class="h-sub">Section&nbsp;5 limits, evaluated against companies currently marked "Qualifies".</p>
+    <div class="constraint-grid" id="constraintCards"></div>
+    <div style="overflow-x:auto">
+      <table id="sectorTbl">
+        <thead><tr><th>Sector</th><th>Qualifying companies</th><th>Count</th><th>Limit</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" id="constraintNote"></p>
+  </div>
+
+  <div class="panel">
+    <h2>Companies to consider</h2>
+    <p class="h-sub">Watchlist, not yet part of the 12-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above.</p>
+    <div style="overflow-x:auto">
+      <table class="matrix" id="watchMatrixTbl">
+        <thead><tr>
+          <th>Ticker</th><th>Company</th><th>Sector</th>
+          <th>Profit &gt;2x</th><th>Revenue &gt;2x</th><th>PE &lt;11</th><th>PBV &lt;1.5</th><th>ROE+DY &gt;16%</th>
+          <th>Below mkt PE/PBV</th><th>Below sector PE/PBV</th><th>Verdict</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" id="watchNote"></p>
+  </div>
+
+  <div class="panel">
+    <h2>Valuation map — PE vs PBV</h2>
+    <p class="h-sub">Bottom-left quadrant (PE &lt;11, PBV &lt;1.5) is the target zone.</p>
+    <div class="legend">
+      <span><span class="dot" style="background:#0ca30c"></span>Qualifies</span>
+      <span><span class="dot" style="background:#d03b3b"></span>Fails criteria</span>
+      <span>Dashed lines = thresholds</span>
+    </div>
+    <div class="chartbox" style="height:340px"><canvas id="scatter" role="img" aria-label="Scatter plot of PE ratio versus price-to-book for 12 companies with threshold lines at PE 11 and PBV 1.5"></canvas></div>
+  </div>
+
+  <div class="panel">
+    <h2>ROE + dividend yield</h2>
+    <p class="h-sub">Dashed line = 16% minimum. SPEN is exempt from this test.</p>
+    <div class="chartbox" id="barbox"><canvas id="bar" role="img" aria-label="Horizontal bar chart of ROE plus dividend yield by company against a 16 percent minimum"></canvas></div>
+  </div>
+
+  <div class="panel">
+    <h2>Growth — revenue vs profit (10-yr multiple)</h2>
+    <p class="h-sub">Dashed line = 2x minimum on each.</p>
+    <div class="chartbox" style="height:340px"><canvas id="growth" role="img" aria-label="Scatter plot of revenue growth versus profit growth multiples with 2x threshold lines"></canvas></div>
+  </div>
+
+  <div class="panel">
+    <h2>All metrics</h2>
+    <div style="overflow-x:auto">
+      <table id="tbl">
+        <thead><tr>
+          <th>Ticker</th><th>Company</th><th>Sector</th><th>Price</th><th>PE</th><th>PBV</th><th>DY</th><th>ROE 10y</th><th>ROE+DY</th><th>Rev</th><th>Profit</th><th>Verdict</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" id="note"></p>
+  </div>
+</div>
+
+<script>
+const RAW=[
+ ["AAIC","Softlogic Life","Insurance",90.80,15.39,44.25,4.50,0.29,7.8,4.84,false],
+ ["CALT","Capital Alliance","Financials",52.23,6.13,33.82,16.00,0.52,8.2,4.5,false],
+ ["CIC","CIC Holdings","Materials",31.52,3.64,24.38,0.50,0.152,2.85,3.0,false],
+ ["CIND","Central Industries","Capital Goods",223.89,26.91,202.00,6.00,0.174,2.7,4.7,false],
+ ["CINS","Ceylinco Holdings","Insurance",2999.60,391.54,4098.00,51.00,0.1444,2.5,2.37,false],
+ ["COMB","Commercial Bank","Banks",208.70,38.09,203.34,7.93,0.156,3.8,4.0,false],
+ ["HAYC","Haycarb","Materials",157.49,12.18,98.83,4.07,0.159,5.0,4.5,false],
+ ["LFIN","LB Finance","Financials",166.45,25.22,112.08,8.20,0.2686,3.1,3.48,false],
+ ["LIOC","Lanka IOC","Energy",141.44,19.84,172.00,5.00,0.20,3.0,27.0,false],
+ ["SAMP","Sampath Bank","Banks",141.85,25.98,159.68,10.30,0.152,3.2,3.3,false],
+ ["SPEN","Aitken Spence","Diversified",150.33,16.74,218.90,4.00,0.073,2.1,2.3,true],
+ ["TILE","Lanka Tiles","Capital Goods",42.93,4.45,60.72,1.70,0.173,2.8,3.3,false],
+];
+// Market PE/PBV and GICS-sector PE/PBV from the CSE Daily Market Publication, as recorded per sheet in Company Analysis.xlsx
+const SECTOR_BENCH={
+ "Banks":{mktPE:11.49,mktPBV:1.34,gicsPE:5.15,gicsPBV:0.79},
+ "Insurance":{mktPE:11.55,mktPBV:1.35,gicsPE:7.96,gicsPBV:1.08},
+ "Financials":{mktPE:11.44,mktPBV:1.34,gicsPE:8.01,gicsPBV:0.98},
+ "Capital Goods":{mktPE:11.62,mktPBV:1.35,gicsPE:21.24,gicsPBV:1.16},
+ "Materials":{mktPE:11.81,mktPBV:1.38,gicsPE:11.97,gicsPBV:1.71},
+ "Energy":{mktPE:11.81,mktPBV:1.38,gicsPE:13.33,gicsPBV:1.06},
+ "Real Estate":{mktPE:11.81,mktPBV:1.38,gicsPE:10.38,gicsPBV:1.27},
+ "Utilities":{mktPE:11.81,mktPBV:1.38,gicsPE:21.09,gicsPBV:2.38},
+ "Food & Beverage":{mktPE:11.8,mktPBV:1.38,gicsPE:15.39,gicsPBV:2.15},
+};
+SECTOR_BENCH["Diversified"]=SECTOR_BENCH["Capital Goods"]; // SPEN: CSE GICS lists Aitken Spence under Capital Goods
+const PERERA_GROUP=new Set(["HAYC","LFIN","TILE","SAMP"]); // Dhammika Perera / Vallibel-Hayleys cluster (SAMP = his largest single holding)
+const SECTOR_LIMIT=2, MAX_SECTORS=8, CONCENTRATION_LIMIT=0.30;
+
+function mapRows(raw){return raw.map(r=>{const[t,name,sector,price,eps,nav,dps,roe,rev,prof,exempt]=r;
+  const pe=price/eps,pbv=price/nav,dy=dps/price,rdy=roe+dy;
+  const q=(prof>2&&rev>2&&pe<11&&pbv<1.5&&(exempt||rdy>0.16));
+  const bench=SECTOR_BENCH[sector]||{};
+  const belowMkt=pe<bench.mktPE&&pbv<bench.mktPBV;
+  const belowSector=pe<bench.gicsPE&&pbv<bench.gicsPBV;
+  const perera=PERERA_GROUP.has(t);
+  return{t,name,sector,price,eps,nav,dps,roe,rev,prof,exempt,pe,pbv,dy,rdy,q,bench,belowMkt,belowSector,perera};});}
+
+const WATCH_RAW=[
+ ["OSEA","Overseas Realty","Real Estate",50.04,7.64,54.43,1.75,0.096,4.3,3.0,false],
+ ["KCAB","Kelani Cables","Capital Goods",109.72,11.30,70.55,1.50,0.1711,2.67,4.6,false],
+ ["VLL","Vidullanka","Utilities",22.03,1.45,8.97,0.65,0.16,7.5,4.2,false],
+ ["CCS","Ceylon Cold Stores","Food & Beverage",130.06,8.30,26.26,7.03,0.183,4.4,2.2,false],
+ ["PLR","Prime Lands","Real Estate",43.93,2.20,12.2,0.80,0.206,1.2,1.2,false],
+ ["CDB","Citizens Dev. Business Finance","Financials",42.52,6.19,39.63,1.75,0.178,3.5,4.47,false],
+];
+
+const D=mapRows(RAW);
+const W=mapRows(WATCH_RAW);
+let filter="all";
+const shown=()=>D.filter(d=>filter==="all"||(filter==="q"?d.q:!d.q));
+
+function cards(){
+  const q=D.filter(d=>d.q).length, sec=new Set(D.map(d=>d.sector)).size;
+  document.getElementById("cards").innerHTML=[
+    ["Companies",D.length],["Qualifies",q],["Fails criteria",D.length-q],["Sectors used",sec+" / 8"]
+  ].map(c=>`<div class="card"><div class="lbl">${c[0]}</div><div class="val">${c[1]}</div></div>`).join("");
+}
+function freshness(){
+  document.getElementById("freshness").innerHTML=
+    "<strong>Last data refresh:</strong> 2026-07-06 (live PE/EPS/DPS from stockanalysis.com, derived price = PE×EPS, cross-checked vs Market Cap ÷ Shares; NAV, 10-yr ROE, growth unchanged from Company Analysis) &middot; "+
+    "<strong>Next refresh:</strong> weekly, automatically.";
+}
+function mx(ok,warn){return `<span class="mx ${warn?'warn-cell':(ok?'pass-cell':'fail-cell')}">${ok?"✓":"✗"}</span>`;}
+function matrixTbl(){
+  const rows=shown().map(d=>{
+    const sectorWarn=!d.belowSector&&d.q; // still qualifies overall but above its GICS sector PE/PBV
+    return `<tr>
+      <td>${d.t}</td><td>${d.name}</td><td>${d.sector}</td>
+      <td>${mx(d.prof>2)} ${d.prof.toFixed(1)}x</td>
+      <td>${mx(d.rev>2)} ${d.rev.toFixed(1)}x</td>
+      <td>${mx(d.pe<11)} ${d.pe.toFixed(2)}</td>
+      <td>${mx(d.pbv<1.5)} ${d.pbv.toFixed(2)}</td>
+      <td>${d.exempt?"— exempt":mx(d.rdy>0.16)+" "+(d.rdy*100).toFixed(1)+"%"}</td>
+      <td>${mx(d.belowMkt)}</td>
+      <td>${mx(d.belowSector,sectorWarn)}</td>
+      <td><span class="badge ${d.q?"b-q":"b-f"}">${d.q?"Qualifies":"Fails"}</span></td>
+    </tr>`;}).join("");
+  document.querySelector("#matrixTbl tbody").innerHTML=rows;
+}
+function watchMatrixTbl(){
+  const rows=W.map(d=>{
+    const sectorWarn=!d.belowSector&&d.q;
+    return `<tr>
+      <td>${d.t}</td><td>${d.name}</td><td>${d.sector}</td>
+      <td>${mx(d.prof>2)} ${d.prof.toFixed(1)}x</td>
+      <td>${mx(d.rev>2)} ${d.rev.toFixed(1)}x</td>
+      <td>${mx(d.pe<11)} ${d.pe.toFixed(2)}</td>
+      <td>${mx(d.pbv<1.5)} ${d.pbv.toFixed(2)}</td>
+      <td>${d.exempt?"— exempt":mx(d.rdy>0.16)+" "+(d.rdy*100).toFixed(1)+"%"}</td>
+      <td>${mx(d.belowMkt)}</td>
+      <td>${mx(d.belowSector,sectorWarn)}</td>
+      <td><span class="badge ${d.q?"b-q":"b-f"}">${d.q?"Qualifies":"Fails"}</span></td>
+    </tr>`;}).join("");
+  document.querySelector("#watchMatrixTbl tbody").innerHTML=rows;
+  const fails=W.filter(d=>!d.q);
+  document.getElementById("watchNote").textContent=fails.length?
+    "Fails: "+fails.map(d=>{const r=[];
+      if(d.pe>=11)r.push("PE "+d.pe.toFixed(2));
+      if(d.pbv>=1.5)r.push("PBV "+d.pbv.toFixed(2));
+      if(!d.exempt&&d.rdy<=0.16)r.push("ROE+DY "+(d.rdy*100).toFixed(1)+"%");
+      if(d.prof<=2)r.push("Profit "+d.prof.toFixed(1)+"x");
+      if(d.rev<=2)r.push("Revenue "+d.rev.toFixed(1)+"x");
+      return d.t+" ("+r.join(", ")+")";}).join(" · ")
+    :"All 4 watchlist companies currently qualify.";
+}
+function constraints(){
+  const qualifiers=D.filter(d=>d.q);
+  const bySector={};
+  qualifiers.forEach(d=>{(bySector[d.sector]=bySector[d.sector]||[]).push(d.t);});
+  const sectorsUsed=Object.keys(bySector).length;
+  const sectorOver=Object.values(bySector).some(a=>a.length>SECTOR_LIMIT);
+  const pereraCount=qualifiers.filter(d=>d.perera).length;
+  const pereraPct=qualifiers.length?pereraCount/qualifiers.length:0;
+  const cards=[
+    {lbl:"Qualifying companies",val:qualifiers.length,ok:true},
+    {lbl:"Sectors used (max "+MAX_SECTORS+")",val:sectorsUsed,ok:sectorsUsed<=MAX_SECTORS},
+    {lbl:"Max per sector (limit "+SECTOR_LIMIT+")",val:sectorOver?"Exceeded":"OK",ok:!sectorOver},
+    {lbl:"Perera/Vallibel-Hayleys group",val:(pereraPct*100).toFixed(0)+"% (limit 30%)",ok:pereraPct<=CONCENTRATION_LIMIT},
+  ];
+  document.getElementById("constraintCards").innerHTML=cards.map(c=>
+    `<div class="cbox ${c.ok?"ok":"bad"}"><div class="lbl">${c.lbl}</div><div class="val">${c.val}</div></div>`).join("");
+  const rows=Object.entries(bySector).map(([sec,tickers])=>
+    `<tr><td>${sec}</td><td>${tickers.join(", ")}</td><td>${tickers.length}</td><td>${tickers.length>SECTOR_LIMIT?'<span class="fail-cell">&gt; '+SECTOR_LIMIT+'</span>':SECTOR_LIMIT}</td></tr>`).join("");
+  document.querySelector("#sectorTbl tbody").innerHTML=rows;
+  let note="";
+  if(pereraPct>CONCENTRATION_LIMIT){
+    const names=qualifiers.filter(d=>d.perera).map(d=>d.t).join(", ");
+    note=`Flag: ${names} together are ${(pereraPct*100).toFixed(0)}% of qualifying companies — above the 30% single-group cap tied to Dhammika Perera (Hayleys/Vallibel). Consider dropping one before finalizing the portfolio.`;
+  } else {
+    note="No constraint breaches among currently qualifying companies.";
+  }
+  document.getElementById("constraintNote").textContent=note;
+}
+function tbl(){
+  const rows=shown().map(d=>{
+    const fc=(v,bad)=>bad?`<span class="fail-cell">${v}</span>`:v;
+    return `<tr>
+      <td>${d.t}</td><td>${d.name}</td><td>${d.sector}</td>
+      <td>${d.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+      <td>${fc(d.pe.toFixed(2),d.pe>=11)}</td>
+      <td>${fc(d.pbv.toFixed(2),d.pbv>=1.5)}</td>
+      <td>${(d.dy*100).toFixed(1)}%</td>
+      <td>${(d.roe*100).toFixed(1)}%</td>
+      <td>${d.exempt?"—":fc((d.rdy*100).toFixed(1)+"%",d.rdy<=0.16)}</td>
+      <td>${d.rev.toFixed(1)}x</td><td>${d.prof.toFixed(1)}x</td>
+      <td><span class="badge ${d.q?"b-q":"b-f"}">${d.q?"Qualifies":"Fails"}</span></td>
+    </tr>`;}).join("");
+  document.querySelector("#tbl tbody").innerHTML=rows;
+  const fails=D.filter(d=>!d.q);
+  document.getElementById("note").textContent="Fails: "+fails.map(d=>{
+    const r=[];if(d.pbv>=1.5)r.push("PBV "+d.pbv.toFixed(2));if(d.pe>=11)r.push("PE "+d.pe.toFixed(2));
+    return d.t+" ("+r.join(", ")+")";}).join(" · ");
+}
+const GREEN="#0ca30c",RED="#d03b3b",MUTED="#898781";
+function col(d){return d.q?GREEN:RED;}
+const thr=(lines)=>({id:"thr",afterDraw(c){const{ctx,chartArea:a,scales}=c;ctx.save();ctx.setLineDash([5,4]);ctx.strokeStyle=MUTED;ctx.lineWidth=1;
+  lines.forEach(l=>{if(l.x!=null){const x=scales.x.getPixelForValue(l.x);ctx.beginPath();ctx.moveTo(x,a.top);ctx.lineTo(x,a.bottom);ctx.stroke();}
+   if(l.y!=null){const y=scales.y.getPixelForValue(l.y);ctx.beginPath();ctx.moveTo(a.left,y);ctx.lineTo(a.right,y);ctx.stroke();}});ctx.restore();}});
+const lbl=(fmt)=>({id:"lbl",afterDatasetsDraw(c){const{ctx}=c;ctx.save();ctx.fillStyle=MUTED;ctx.font="10px sans-serif";
+  c.data.datasets[0].data.forEach((p,i)=>{const m=c.getDatasetMeta(0).data[i];ctx.fillText(p.t,m.x+7,m.y+3);});ctx.restore();}});
+
+let scatterC,barC,growthC;
+function scatter(){
+  const data=shown().map(d=>({x:d.pe,y:d.pbv,t:d.t,c:col(d)}));
+  if(scatterC)scatterC.destroy();
+  scatterC=new Chart(document.getElementById("scatter"),{type:"scatter",
+   data:{datasets:[{data,pointBackgroundColor:data.map(p=>p.c),pointRadius:7,pointHoverRadius:9}]},
+   options:{responsive:true,maintainAspectRatio:false,layout:{padding:14},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.t}: PE ${c.raw.x.toFixed(2)}, PBV ${c.raw.y.toFixed(2)}`}}},
+    scales:{x:{title:{display:true,text:"PE",color:MUTED},min:4,max:13,ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}},
+            y:{title:{display:true,text:"PBV",color:MUTED},min:0.5,max:2.4,ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}}}},
+   plugins:[thr([{x:11},{y:1.5}]),lbl()]});
+}
+function bar(){
+  const s=[...shown()].sort((a,b)=>b.rdy-a.rdy);
+  document.getElementById("barbox").style.height=(s.length*34+70)+"px";
+  if(barC)barC.destroy();
+  barC=new Chart(document.getElementById("bar"),{type:"bar",
+   data:{labels:s.map(d=>d.t),datasets:[{data:s.map(d=>+(d.rdy*100).toFixed(1)),backgroundColor:s.map(col),borderRadius:4,barThickness:18}]},
+   options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`ROE+DY ${c.parsed.x}%`}}},
+    scales:{x:{title:{display:true,text:"ROE + DY (%)",color:MUTED},ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}},
+            y:{ticks:{color:MUTED},grid:{display:false}}}},
+   plugins:[thr([{x:16}])]});
+}
+function growth(){
+  const data=shown().map(d=>({x:d.rev,y:d.prof,t:d.t,c:col(d)}));
+  if(growthC)growthC.destroy();
+  growthC=new Chart(document.getElementById("growth"),{type:"scatter",
+   data:{datasets:[{data,pointBackgroundColor:data.map(p=>p.c),pointRadius:7,pointHoverRadius:9}]},
+   options:{responsive:true,maintainAspectRatio:false,layout:{padding:14},
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.t}: Rev ${c.raw.x.toFixed(1)}x, Profit ${c.raw.y.toFixed(1)}x`}}},
+    scales:{x:{title:{display:true,text:"Revenue growth (x)",color:MUTED},min:1.5,max:9,ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}},
+            y:{title:{display:true,text:"Profit growth (x)",color:MUTED},min:1.5,max:29,ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}}}},
+   plugins:[thr([{x:2},{y:2}]),lbl()]});
+}
+function render(){freshness();cards();matrixTbl();watchMatrixTbl();constraints();tbl();scatter();bar();growth();}
+document.getElementById("chips").addEventListener("click",e=>{
+  const c=e.target.closest(".chip");if(!c)return;
+  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));c.classList.add("on");
+  filter=c.dataset.f;render();
+});
+render();
+</script>
+</body>
+</html>
