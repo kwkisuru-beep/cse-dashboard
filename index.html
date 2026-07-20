@@ -133,7 +133,7 @@ tbody tr:hover{background:var(--surface1)}
 
   <div class="panel">
     <h2>Companies to consider</h2>
-    <p class="h-sub">Watchlist, not yet part of the 12-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above.</p>
+    <p class="h-sub">Watchlist, not yet part of the 12-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above. 18 names: OSEA, KCAB, VLL, CCS, PLR, CDB (prior) + SOY, VFIN, HASU, DIPD, VPEL, GRAN, ASIR, ETWO, HHL, VONE, LOFC, AEL (added 2026-07-20 from Watch List Companies.md; price/EPS/DPS/NAV verified live via stockanalysis.com, cross-checked PE×EPS vs DPS÷yield).</p>
     <div style="overflow-x:auto">
       <table class="matrix" id="watchMatrixTbl">
         <thead><tr>
@@ -145,6 +145,7 @@ tbody tr:hover{background:var(--surface1)}
       </table>
     </div>
     <p class="note" id="watchNote"></p>
+    <p class="note">Group overlap: VFIN, VPEL, VONE (Vallibel) and DIPD (Hayleys) share the Dhammika Perera cluster with your held HAYC/LFIN/TILE/SAMP — factor this in if selecting from this list. LOFC (LOLC) and AEL are separate ownership groups. SOY's live dividend yield (0.34%) corrects the ~27% figure flagged as erroneous in the source workbook — PE/ROE-based qualification unaffected. PBV is applied as a hard &lt;1.5 filter here (unlike the source watch-list note, which ignored PBV for the bear-market case) for consistency with the rest of this dashboard.</p>
   </div>
 
   <div class="panel">
@@ -210,6 +211,7 @@ const SECTOR_BENCH={
  "Real Estate":{mktPE:11.81,mktPBV:1.38,gicsPE:10.38,gicsPBV:1.27},
  "Utilities":{mktPE:11.81,mktPBV:1.38,gicsPE:21.09,gicsPBV:2.38},
  "Food & Beverage":{mktPE:11.8,mktPBV:1.38,gicsPE:15.39,gicsPBV:2.15},
+ "Health Care":{mktPE:11.44,mktPBV:1.34,gicsPE:11.42,gicsPBV:1.62},
 };
 SECTOR_BENCH["Diversified"]=SECTOR_BENCH["Capital Goods"]; // SPEN: CSE GICS lists Aitken Spence under Capital Goods
 const PERERA_GROUP=new Set(["HAYC","LFIN","TILE","SAMP"]); // Dhammika Perera / Vallibel-Hayleys cluster (SAMP = his largest single holding)
@@ -231,6 +233,19 @@ const WATCH_RAW=[
  ["CCS","Ceylon Cold Stores","Food & Beverage",130.06,8.30,26.26,7.03,0.183,4.4,2.2,false],
  ["PLR","Prime Lands","Real Estate",43.93,2.20,12.2,0.80,0.206,1.2,1.2,false],
  ["CDB","Citizens Dev. Business Finance","Financials",42.52,6.19,39.63,1.75,0.178,3.5,4.47,false],
+ // Added 2026-07-20 from Watch List Companies.md (12 new names; KCAB/OSEA/CDB already above, skipped)
+ ["SOY","Convenience Foods (Lanka)","Food & Beverage",2353.24,276.26,1454.84,8.00,0.174,4.13,6.8,false],
+ ["VFIN","Vallibel Finance","Financials",90.14,15.12,80.28,2.75,0.213,5.15,5.0,false],
+ ["HASU","HNB Life (HNB Assurance)","Insurance",147.49,15.69,89.60,5.00,0.191,4.57,3.68,false],
+ ["DIPD","Dipped Products","Materials",56.51,5.88,58.18,2.13,0.150,3.37,4.6,false],
+ ["VPEL","Vallibel Power Erathna","Energy",15.41,1.70,4.34,0.60,0.28,1.78,2.6,false],
+ ["GRAN","Ceylon Grain Elevators","Food & Beverage",482.54,60.42,247.92,15.00,0.185,2.0,4.3,false],
+ ["ASIR","Asiri Hospital Holdings","Health Care",34.50,4.28,21.57,0.00,0.14,3.1,1.39,false],
+ ["ETWO","Equity Two","Real Estate",60.98,8.90,68.70,4.41,0.103,2.0,4.87,false],
+ ["HHL","Hemas Holdings","Capital Goods",31.68,2.97,19.03,0.95,0.129,2.93,2.55,false],
+ ["VONE","Vallibel One","Diversified",90.35,11.57,108.75,3.00,0.118,2.8,4.5,false],
+ ["LOFC","LOLC Finance","Financials",4.99,0.89,5.26,0.00,0.198,6.3,17.6,false],
+ ["AEL","Access Engineering","Capital Goods",76.60,7.17,41.15,2.00,0.117,2.0,2.5,false],
 ];
 
 const D=mapRows(RAW);
