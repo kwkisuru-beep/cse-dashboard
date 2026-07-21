@@ -262,7 +262,7 @@ function cards(){
 function freshness(){
   document.getElementById("freshness").innerHTML=
     "<strong>Last data refresh:</strong> 2026-07-20 (live last-traded price direct from CSE cse.lk API; EPS/DPS/NAV from stockanalysis.com; PE/PBV/DY recomputed from the CSE price; 10-yr ROE &amp; growth from Company Analysis) &middot; "+
-    "<strong>Next refresh:</strong> every 2 days, automatically.";
+    "<strong>Next refresh:</strong> Mondays &amp; Thursdays 2pm (auto; catch-up Tue/Fri if missed).";
 }
 function mx(ok,warn){return `<span class="mx ${warn?'warn-cell':(ok?'pass-cell':'fail-cell')}">${ok?"✓":"✗"}</span>`;}
 function matrixTbl(){
