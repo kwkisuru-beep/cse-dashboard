@@ -92,7 +92,7 @@ tbody tr:hover{background:var(--surface1)}
 </script>
 <div class="wrap">
   <h1>CSE portfolio dashboard</h1>
-  <p class="sub">13 companies · live last-traded price direct from CSE (cse.lk) · EPS/DPS/NAV/Debt-Equity from stockanalysis.com (S&amp;P Global data) · 10-yr ROE &amp; growth from your Company Analysis. PE, PBV, DY recomputed from the live CSE price. Leverage column: Debt/Equity for most companies; banks show Equity/Assets instead (D/E is n/a for deposit-funded banks — Equity/Assets is the more meaningful capital-cushion metric there). Not a screening criterion, shown for reference only. Criteria: profit &gt;2x, revenue &gt;2x, PE &lt;11, PBV &lt;1.5, ROE+DY &gt;16% (SPEN exempt).</p>
+  <p class="sub">13 companies · live last-traded price direct from CSE (cse.lk) · EPS/DPS/NAV/Debt-Equity from stockanalysis.com (S&amp;P Global data) · 10-yr ROE &amp; growth from your Company Analysis. PE, PBV, DY recomputed from the live CSE price. Leverage column: Debt/Equity for lenders/industrials; banks and insurers show Equity/Assets instead (their dominant liability — deposits, or policy reserves — isn't captured by a conventional D/E figure, so Equity/Assets is the more meaningful capital-cushion metric there). Not a screening criterion, shown for reference only. Criteria: profit &gt;2x, revenue &gt;2x, PE &lt;11, PBV &lt;1.5, ROE+DY &gt;16% (SPEN exempt).</p>
   <p class="freshness" id="freshness"></p>
 
   <div class="chips" id="chips">
@@ -187,11 +187,11 @@ tbody tr:hover{background:var(--surface1)}
 
 <script>
 const RAW=[
- ["AAIC","Softlogic Life","Insurance",81.0,15.39,44.25,4.5,0.29,7.8,4.84,false,0.37,null],
+ ["AAIC","Softlogic Life","Insurance",81.0,15.39,44.25,4.5,0.29,7.8,4.84,false,null,0.1843],
  ["CALT","Capital Alliance","Financials",50.5,6.07,33.76,16.0,0.52,8.2,4.5,false,6.50,null],
  ["CIC","CIC Holdings","Materials",29.4,3.79,25.26,0.5,0.152,2.85,3.0,false,0.52,null],
  ["CIND","Central Industries","Capital Goods",210,26.91,202.25,6.0,0.174,2.7,4.7,false,null,null],
- ["CINS","Ceylinco Holdings","Insurance",2851.25,391.54,4098.0,51.0,0.1444,2.5,2.37,false,0.04,null],
+ ["CINS","Ceylinco Holdings","Insurance",2851.25,391.54,4098.0,51.0,0.1444,2.5,2.37,false,null,0.2898],
  ["COMB","Commercial Bank","Banks",202,38.09,203.34,7.93,0.156,3.8,4.0,false,null,0.0947],
  ["HAYC","Haycarb","Materials",177.75,12.18,98.83,4.07,0.159,5.0,4.5,false,0.6,null],
  ["LFIN","LB Finance","Financials",159.0,27.1,113.52,8.2,0.2686,3.1,3.48,false,2.74,null],
@@ -236,7 +236,7 @@ const WATCH_RAW=[
  ["CDB","Citizens Dev. Business Finance","Financials",40.7,6.19,39.62,1.75,0.178,3.5,4.47,false,3.15,null],
  ["SOY","Convenience Foods (Lanka)","Food & Beverage",2349.5,264.58,1506.78,8.0,0.174,4.13,6.8,false,0.03,null],
  ["VFIN","Vallibel Finance","Financials",90.0,15.12,80.28,2.75,0.213,5.15,5.0,false,3.82,null],
- ["HASU","HNB Life (HNB Assurance)","Insurance",152.0,16.39,88.10,5.0,0.191,4.57,3.68,false,0.11,null],
+ ["HASU","HNB Life (HNB Assurance)","Insurance",152.0,16.39,88.10,5.0,0.191,4.57,3.68,false,null,0.1521],
  ["DIPD","Dipped Products","Materials",56.4,5.88,58.18,2.13,0.150,3.37,4.6,false,0.4,null],
  ["VPEL","Vallibel Power Erathna","Energy",15.4,1.7,4.34,0.6,0.28,1.78,2.6,false,0.38,null],
  ["GRAN","Ceylon Grain Elevators","Food & Beverage",469.0,63.49,261.92,15.0,0.185,2.0,4.3,false,0.04,null],
