@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CSE Portfolio Dashboard — 13 Companies</title>
+<title>CSE Portfolio Dashboard — 15 Companies</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 :root{
@@ -92,11 +92,11 @@ tbody tr:hover{background:var(--surface1)}
 </script>
 <div class="wrap">
   <h1>CSE portfolio dashboard</h1>
-  <p class="sub">13 companies · live last-traded price direct from CSE (cse.lk) · EPS/DPS/NAV/Debt-Equity from stockanalysis.com (S&amp;P Global data) · 10-yr ROE &amp; growth from your Company Analysis. PE, PBV, DY recomputed from the live CSE price. Leverage column: Equity/Assets for banks, insurers, and NBFI/finance companies (deposits or policy reserves — their dominant liability — aren't meaningfully captured by a conventional D/E figure); Debt/Equity for everyone else. Not a screening criterion, shown for reference only. Criteria: profit &gt;2x, revenue &gt;2x, PE &lt;11, PBV &lt;1.5, ROE+DY &gt;16% (SPEN exempt).</p>
+  <p class="sub">15 companies · live last-traded price direct from CSE (cse.lk) · EPS/DPS/NAV/Debt-Equity from stockanalysis.com (S&amp;P Global data) · 10-yr ROE &amp; growth from your Company Analysis. PE, PBV, DY recomputed from the live CSE price. Leverage column: Equity/Assets for banks, insurers, and NBFI/finance companies (deposits or policy reserves — their dominant liability — aren't meaningfully captured by a conventional D/E figure); Debt/Equity for everyone else. Not a screening criterion, shown for reference only. Criteria: profit &gt;2x, revenue &gt;2x, PE &lt;11, PBV &lt;1.5, ROE+DY &gt;16% (SPEN exempt).</p>
   <p class="freshness" id="freshness"></p>
 
   <div class="chips" id="chips">
-    <div class="chip on" data-f="all">All 13</div>
+    <div class="chip on" data-f="all">All 15</div>
     <div class="chip" data-f="q">Qualifies</div>
     <div class="chip" data-f="f">Fails criteria</div>
   </div>
@@ -133,7 +133,7 @@ tbody tr:hover{background:var(--surface1)}
 
   <div class="panel">
     <h2>Companies to consider</h2>
-    <p class="h-sub">Watchlist, not yet part of the 13-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above. 18 names: OSEA, KCAB, VLL, CCS, PLR, CDB (prior) + SOY, VFIN, HASU, DIPD, VPEL, GRAN, ASIR, ETWO, HHL, VONE, LOFC, AEL (added 2026-07-20 from Watch List Companies.md; last-traded price direct from CSE cse.lk API, EPS/DPS/NAV from stockanalysis.com &amp; Company Analysis).</p>
+    <p class="h-sub">Watchlist, not yet part of the 15-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above. 16 names: KCAB, VLL, CCS, PLR, CDB (prior) + SOY, VFIN, HASU, DIPD, GRAN, ASIR, ETWO, HHL, VONE, LOFC, AEL (added 2026-07-20 from Watch List Companies.md; last-traded price direct from CSE cse.lk API, EPS/DPS/NAV from stockanalysis.com &amp; Company Analysis). OSEA and VPEL moved into the held portfolio above on 2026-08-20 after purchase.</p>
     <div style="overflow-x:auto">
       <table class="matrix" id="watchMatrixTbl">
         <thead><tr>
@@ -145,7 +145,7 @@ tbody tr:hover{background:var(--surface1)}
       </table>
     </div>
     <p class="note" id="watchNote"></p>
-    <p class="note">Group overlap: VFIN, VPEL, VONE (Vallibel) and DIPD (Hayleys) share the Dhammika Perera cluster with your held HAYC/LFIN/TILE/SAMP — factor this in if selecting from this list. LOFC (LOLC) and AEL are separate ownership groups. SOY's live dividend yield (0.34%) corrects the ~27% figure flagged as erroneous in the source workbook — PE/ROE-based qualification unaffected. PBV is applied as a hard &lt;1.5 filter here (unlike the source watch-list note, which ignored PBV for the bear-market case) for consistency with the rest of this dashboard.</p>
+    <p class="note">Group overlap: VFIN, VONE (Vallibel) and DIPD (Hayleys) share the Dhammika Perera cluster with your held HAYC/LFIN/TILE/SAMP/VPEL — factor this in if selecting from this list. LOFC (LOLC) and AEL are separate ownership groups. SOY's live dividend yield (0.34%) corrects the ~27% figure flagged as erroneous in the source workbook — PE/ROE-based qualification unaffected. PBV is applied as a hard &lt;1.5 filter here (unlike the source watch-list note, which ignored PBV for the bear-market case) for consistency with the rest of this dashboard.</p>
   </div>
 
   <div class="panel">
@@ -156,7 +156,7 @@ tbody tr:hover{background:var(--surface1)}
       <span><span class="dot" style="background:#d03b3b"></span>Fails criteria</span>
       <span>Dashed lines = thresholds</span>
     </div>
-    <div class="chartbox" style="height:340px"><canvas id="scatter" role="img" aria-label="Scatter plot of PE ratio versus price-to-book for 12 companies with threshold lines at PE 11 and PBV 1.5"></canvas></div>
+    <div class="chartbox" style="height:340px"><canvas id="scatter" role="img" aria-label="Scatter plot of PE ratio versus price-to-book for 15 companies with threshold lines at PE 11 and PBV 1.5"></canvas></div>
   </div>
 
   <div class="panel">
@@ -187,19 +187,21 @@ tbody tr:hover{background:var(--surface1)}
 
 <script>
 const RAW=[
- ["AAIC","Softlogic Life","Insurance",84.0,15.39,44.25,4.5,0.29,7.8,4.84,false,null,0.1843],
- ["CALT","Capital Alliance","Financials",48.9,-6.73,25.24,16.0,0.52,8.2,4.5,false,null,0.1320],
- ["CIC","CIC Holdings","Materials",29.6,3.79,25.26,0.5,0.152,2.85,3.0,false,0.52,null],
- ["CIND","Central Industries","Capital Goods",215.0,28.86,203.86,6.0,0.174,2.7,4.7,false,null,null],
- ["CINS","Ceylinco Holdings","Insurance",2850.0,390.36,4109.17,51.0,0.1444,2.5,2.37,false,null,0.2898],
- ["COMB","Commercial Bank","Banks",205.5,38.58,216.20,7.93,0.156,3.8,4.0,false,null,0.0973],
- ["HAYC","Haycarb","Materials",176.0,14.14,103.93,4.07,0.159,5.0,4.5,false,0.59,null],
- ["LFIN","LB Finance","Financials",159.25,27.10,113.52,8.2,0.2686,3.1,3.48,false,null,0.1418],
- ["LIOC","Lanka IOC","Energy",133.0,18.35,175.73,5.0,0.20,3.0,27.0,false,0.05,null],
+ ["AAIC","Softlogic Life","Insurance",82.3,15.39,44.25,4.5,0.29,7.8,4.84,false,null,0.1843],
+ ["CALT","Capital Alliance","Financials",49.1,-6.73,25.24,16.0,0.52,8.2,4.5,false,null,0.1200],
+ ["CIC","CIC Holdings","Materials",29.3,3.79,25.26,0.5,0.152,2.85,3.0,false,0.52,null],
+ ["CIND","Central Industries","Capital Goods",212.0,28.86,203.86,6.0,0.174,2.7,4.7,false,null,null],
+ ["CINS","Ceylinco Holdings","Insurance",2850.0,390.36,4109.17,51.0,0.1444,2.5,2.37,false,null,0.2840],
+ ["COMB","Commercial Bank","Banks",203.25,38.58,216.14,7.93,0.156,3.8,4.0,false,null,0.0973],
+ ["HAYC","Haycarb","Materials",175.0,14.14,103.93,4.07,0.159,5.0,4.5,false,0.59,null],
+ ["LFIN","LB Finance","Financials",156.75,27.10,113.52,8.2,0.2686,3.1,3.48,false,null,0.1418],
+ ["LIOC","Lanka IOC","Energy",133.5,18.35,175.73,5.0,0.20,3.0,27.0,false,0.05,null],
  ["NDB","National Development Bank","Banks",112.0,33.63,199.00,6.38,0.1179,3.0,4.2,false,null,0.0914],
- ["SAMP","Sampath Bank","Banks",140.75,29.67,166.86,10.3,0.152,3.2,3.3,false,null,0.0855],
- ["SPEN","Aitken Spence","Diversified",142.75,19.02,223.84,4.0,0.073,2.1,2.3,true,0.86,null],
- ["TILE","Lanka Tiles","Capital Goods",42.6,4.45,60.72,1.7,0.173,2.8,3.3,false,0.07,null],
+ ["OSEA","Overseas Realty","Real Estate",50.9,6.82,54.67,1.75,0.096,4.3,3.0,false,0.15,null],
+ ["SAMP","Sampath Bank","Banks",139.5,29.67,166.78,10.3,0.152,3.2,3.3,false,null,0.0875],
+ ["SPEN","Aitken Spence","Diversified",141.5,19.02,223.84,4.0,0.073,2.1,2.3,true,0.86,null],
+ ["TILE","Lanka Tiles","Capital Goods",42.8,4.45,60.72,1.7,0.173,2.8,3.3,false,0.07,null],
+ ["VPEL","Vallibel Power Erathna","Energy",15.1,1.73,4.64,0.6,0.28,1.78,2.6,false,0.37,null],
 ];
 // Market PE/PBV and GICS-sector PE/PBV from the CSE Daily Market Publication, as recorded per sheet in Company Analysis.xlsx
 const SECTOR_BENCH={
@@ -215,7 +217,7 @@ const SECTOR_BENCH={
  "Health Care":{mktPE:11.44,mktPBV:1.34,gicsPE:11.42,gicsPBV:1.62},
 };
 SECTOR_BENCH["Diversified"]=SECTOR_BENCH["Capital Goods"]; // SPEN: CSE GICS lists Aitken Spence under Capital Goods
-const PERERA_GROUP=new Set(["HAYC","LFIN","TILE","SAMP"]); // Dhammika Perera / Vallibel-Hayleys cluster (SAMP = his largest single holding)
+const PERERA_GROUP=new Set(["HAYC","LFIN","TILE","SAMP","VPEL"]); // Dhammika Perera / Vallibel-Hayleys cluster (SAMP = his largest single holding; VPEL = Vallibel Power Erathna)
 const SECTOR_LIMIT=2, MAX_SECTORS=8, CONCENTRATION_LIMIT=0.30;
 
 function mapRows(raw){return raw.map(r=>{const[t,name,sector,price,eps,nav,dps,roe,rev,prof,exempt,de,eqa]=r;
@@ -228,24 +230,22 @@ function mapRows(raw){return raw.map(r=>{const[t,name,sector,price,eps,nav,dps,r
   return{t,name,sector,price,eps,nav,dps,roe,rev,prof,exempt,de,eqa,pe,pbv,dy,rdy,q,bench,belowMkt,belowSector,perera};});}
 
 const WATCH_RAW=[
- ["OSEA","Overseas Realty","Real Estate",50.9,6.82,54.67,1.75,0.096,4.3,3.0,false,0.15,null],
- ["KCAB","Kelani Cables","Capital Goods",102.75,11.25,73.14,1.5,0.1711,2.67,4.6,false,0.05,null],
- ["VLL","Vidullanka","Utilities",21.2,1.45,8.97,0.65,0.16,7.5,4.2,false,0.52,null],
- ["CCS","Ceylon Cold Stores","Food & Beverage",126.75,8.27,23.77,7.03,0.183,4.4,2.2,false,1.52,null],
- ["PLR","Prime Lands","Real Estate",43.7,2.47,12.10,0.8,0.206,1.2,1.2,false,0.75,null],
- ["CDB","Citizens Dev. Business Finance","Financials",39.0,6.37,40.60,1.75,0.178,3.5,4.47,false,null,0.1281],
- ["SOY","Convenience Foods (Lanka)","Food & Beverage",2205.0,264.58,1506.78,8.0,0.174,4.13,6.8,false,0.03,null],
- ["VFIN","Vallibel Finance","Financials",96.0,15.04,83.69,2.75,0.213,5.15,5.0,false,null,0.1133],
- ["HASU","HNB Life (HNB Assurance)","Insurance",149.75,16.39,88.10,5.0,0.191,4.57,3.68,false,null,0.1521],
- ["DIPD","Dipped Products","Materials",58.4,6.47,59.84,2.13,0.150,3.37,4.6,false,0.45,null],
- ["VPEL","Vallibel Power Erathna","Energy",15.5,1.73,4.64,0.6,0.28,1.78,2.6,false,0.37,null],
- ["GRAN","Ceylon Grain Elevators","Food & Beverage",486.5,63.49,261.92,15.0,0.185,2.0,4.3,false,0.04,null],
- ["ASIR","Asiri Hospital Holdings","Health Care",34.0,4.39,22.40,0.0,0.14,3.1,1.39,false,0.67,null],
- ["ETWO","Equity Two","Real Estate",62.4,9.07,65.69,4.41,0.103,2.0,4.87,false,null,null],
- ["HHL","Hemas Holdings","Capital Goods",31.3,2.87,18.62,0.95,0.129,2.93,2.55,false,0.21,null],
- ["VONE","Vallibel One","Diversified",92.0,12.43,109.23,3.0,0.118,2.8,4.5,false,2.22,null],
- ["LOFC","LOLC Finance","Financials",5.3,0.89,5.44,0.0,0.198,6.3,17.6,false,null,0.2732],
- ["AEL","Access Engineering","Capital Goods",77.7,7.92,41.95,2.0,0.117,2.0,2.5,false,1.01,null],
+ ["KCAB","Kelani Cables","Capital Goods",99.3,11.25,73.21,1.5,0.1711,2.67,4.6,false,0.05,null],
+ ["VLL","Vidullanka","Utilities",20.9,1.70,9.95,0.65,0.16,7.5,4.2,false,0.67,null],
+ ["CCS","Ceylon Cold Stores","Food & Beverage",125.25,8.27,23.77,7.03,0.183,4.4,2.2,false,1.52,null],
+ ["PLR","Prime Lands","Real Estate",42.1,2.47,12.10,0.8,0.206,1.2,1.2,false,0.75,null],
+ ["CDB","Citizens Dev. Business Finance","Financials",37.5,6.37,40.60,1.75,0.178,3.5,4.47,false,null,0.1281],
+ ["SOY","Convenience Foods (Lanka)","Food & Beverage",2100.0,264.58,1506.78,8.0,0.174,4.13,6.8,false,0.03,null],
+ ["VFIN","Vallibel Finance","Financials",93.8,15.04,83.69,2.75,0.213,5.15,5.0,false,null,0.1133],
+ ["HASU","HNB Life (HNB Assurance)","Insurance",149.25,16.39,88.10,5.0,0.191,4.57,3.68,false,null,0.1521],
+ ["DIPD","Dipped Products","Materials",57.4,6.47,59.84,2.13,0.150,3.37,4.6,false,0.45,null],
+ ["GRAN","Ceylon Grain Elevators","Food & Beverage",480.0,63.49,261.92,15.0,0.185,2.0,4.3,false,0.04,null],
+ ["ASIR","Asiri Hospital Holdings","Health Care",32.5,4.39,22.40,0.0,0.14,3.1,1.39,false,0.67,null],
+ ["ETWO","Equity Two","Real Estate",60.9,9.07,65.69,4.41,0.103,2.0,4.87,false,null,null],
+ ["HHL","Hemas Holdings","Capital Goods",31.4,2.87,18.62,0.95,0.129,2.93,2.55,false,0.21,null],
+ ["VONE","Vallibel One","Diversified",90.9,12.43,109.23,3.0,0.118,2.8,4.5,false,2.22,null],
+ ["LOFC","LOLC Finance","Financials",5.1,0.89,5.44,0.0,0.198,6.3,17.6,false,null,0.2732],
+ ["AEL","Access Engineering","Capital Goods",75.8,7.92,41.95,2.0,0.117,2.0,2.5,false,1.01,null],
 ];
 
 const D=mapRows(RAW);
@@ -261,7 +261,7 @@ function cards(){
 }
 function freshness(){
   document.getElementById("freshness").innerHTML=
-    "<strong>Last data refresh:</strong> 2026-08-17 (live last-traded price direct from CSE cse.lk API; EPS/DPS/NAV from stockanalysis.com; PE/PBV/DY recomputed from the CSE price; 10-yr ROE &amp; growth from Company Analysis) &middot; "+
+    "<strong>Last data refresh:</strong> 2026-08-20 (live last-traded price direct from CSE cse.lk API; EPS/DPS/NAV from stockanalysis.com; PE/PBV/DY recomputed from the CSE price; 10-yr ROE &amp; growth from Company Analysis) &middot; "+
     "<strong>Next refresh:</strong> Mondays &amp; Thursdays 2pm (auto; catch-up Tue/Fri if missed).";
 }
 function mx(ok,warn){return `<span class="mx ${warn?'warn-cell':(ok?'pass-cell':'fail-cell')}">${ok?"✓":"✗"}</span>`;}
@@ -382,7 +382,7 @@ function scatter(){
    options:{responsive:true,maintainAspectRatio:false,layout:{padding:14},
     plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.t}: PE ${c.raw.x.toFixed(2)}, PBV ${c.raw.y.toFixed(2)}`}}},
     scales:{x:{title:{display:true,text:"PE",color:MUTED},min:4,max:13,ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}},
-            y:{title:{display:true,text:"PBV",color:MUTED},min:0.5,max:2.4,ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}}}},
+            y:{title:{display:true,text:"PBV",color:MUTED},min:0.5,max:3.5,ticks:{color:MUTED},grid:{color:"rgba(150,150,150,.12)"}}}},
    plugins:[thr([{x:11},{y:1.5}]),lbl()]});
 }
 function bar(){
