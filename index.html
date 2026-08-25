@@ -133,7 +133,7 @@ tbody tr:hover{background:var(--surface1)}
 
   <div class="panel">
     <h2>Companies to consider</h2>
-    <p class="h-sub">Watchlist, not yet part of the 15-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above. 23 names: KCAB, VLL, CCS, PLR, CDB (prior) + SOY, VFIN, HASU, DIPD, GRAN, ASIR, ETWO, HHL, VONE, LOFC, AEL (added 2026-07-20 from Watch List Companies.md) + DFCC, JINS, CFIN, RCL, CHMX, DIMO, TYRE (added 2026-08-21, sourced from screening Company Analysis.md for PBV&lt;1 with rising profit growth; last-traded price direct from CSE cse.lk API, EPS/DPS/NAV from stockanalysis.com &amp; Company Analysis). OSEA and VPEL moved into the held portfolio above on 2026-08-20 after purchase. Note: JINS's 10-yr ROE/growth figures are from a workbook snapshot that appears to pre-date a large share-count change at the company (live EPS/NAV are far below the workbook's) — treat its ROE+DY pass with caution until re-verified.</p>
+    <p class="h-sub">Watchlist, not yet part of the 15-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above. 20 names: KCAB, VLL, CCS, PLR, CDB (prior) + SOY, VFIN, HASU, DIPD, GRAN, ASIR, ETWO, HHL, VONE, LOFC, AEL (added 2026-07-20 from Watch List Companies.md) + DFCC, JINS, RCL, TYRE (added 2026-08-21, sourced from screening Company Analysis.md for PBV&lt;1 with rising profit growth; last-traded price direct from CSE cse.lk API, EPS/DPS/NAV from stockanalysis.com &amp; Company Analysis). CFIN, CHMX, and DIMO were added in the same batch but removed on 2026-08-21 at the user's request. OSEA and VPEL moved into the held portfolio above on 2026-08-20 after purchase. Note: JINS's 10-yr ROE/growth figures are from a workbook snapshot that appears to pre-date a large share-count change at the company (live EPS/NAV are far below the workbook's) — treat its ROE+DY pass with caution until re-verified.</p>
     <div style="overflow-x:auto">
       <table class="matrix" id="watchMatrixTbl">
         <thead><tr>
@@ -223,11 +223,12 @@ const PERERA_GROUP=new Set(["HAYC","LFIN","TILE","SAMP","VPEL"]); // Dhammika Pe
 const SECTOR_LIMIT=2, MAX_SECTORS=8, CONCENTRATION_LIMIT=0.30;
 
 function mapRows(raw){return raw.map(r=>{const[t,name,sector,price,eps,nav,dps,roe,rev,prof,exempt,de,eqa]=r;
-  const pe=price/eps,pbv=price/nav,dy=dps/price,rdy=roe+dy;
-  const q=(prof>2&&rev>2&&pe<11&&pbv<1.5&&(exempt||rdy>0.16));
+  const pe=eps>0?price/eps:null; // null = loss-making (negative/zero EPS) — PE isn't a meaningful number here, and must not be allowed to satisfy "pe<11" just because a negative number is arithmetically less than 11
+  const pbv=price/nav,dy=dps/price,rdy=roe+dy;
+  const q=(prof>2&&rev>2&&pe!=null&&pe<11&&pbv<1.5&&(exempt||rdy>0.16));
   const bench=SECTOR_BENCH[sector]||{};
-  const belowMkt=pe<bench.mktPE&&pbv<bench.mktPBV;
-  const belowSector=pe<bench.gicsPE&&pbv<bench.gicsPBV;
+  const belowMkt=pe!=null&&pe<bench.mktPE&&pbv<bench.mktPBV;
+  const belowSector=pe!=null&&pe<bench.gicsPE&&pbv<bench.gicsPBV;
   const perera=PERERA_GROUP.has(t);
   return{t,name,sector,price,eps,nav,dps,roe,rev,prof,exempt,de,eqa,pe,pbv,dy,rdy,q,bench,belowMkt,belowSector,perera};});}
 
@@ -250,10 +251,7 @@ const WATCH_RAW=[
  ["AEL","Access Engineering","Capital Goods",75.3,7.92,41.95,2.0,0.117,2.0,2.5,false,1.01,null],
  ["DFCC","DFCC Bank","Banks",128.79,21.50,242.62,2.43,0.0976,3.6,3.4,false,null,0.1195],
  ["JINS","Janashakthi Insurance","Insurance",42.18,3.35,24.68,5.00,0.164,3.26,3.6,false,null,0.4076],
- ["CFIN","Central Finance","Financials",226.75,46.37,379.90,6.50,0.13,1.6,2.23,false,null,0.4955],
  ["RCL","Royal Ceramics Lanka","Capital Goods",44.93,6.87,50.56,2.00,0.164,4.9,2.28,false,0.38,null],
- ["CHMX","Chemanex","Materials",173.22,12.61,284.74,2.50,0.056,1.3,2.3,false,0.04,null],
- ["DIMO","Diesel & Motor Engineering","Retail",1390.08,206.55,1803.50,50.00,0.026,2.3,2.4,false,2.92,null],
  ["TYRE","Kelani Tyres","Auto Mobile",93.00,8.54,95.50,6.50,0.17,3.8,7.0,false,0.00,null],
 ];
 
@@ -274,6 +272,8 @@ function freshness(){
     "<strong>Next refresh:</strong> Mondays &amp; Thursdays 2pm (auto; catch-up Tue/Fri if missed).";
 }
 function mx(ok,warn){return `<span class="mx ${warn?'warn-cell':(ok?'pass-cell':'fail-cell')}">${ok?"✓":"✗"}</span>`;}
+function peCell(d){return d.pe==null?mx(false)+' <span class="fail-cell">Loss</span>':mx(d.pe<11)+" "+d.pe.toFixed(2);}
+function peText(d){return d.pe==null?"Loss":d.pe.toFixed(2);}
 // Unified leverage cell: non-financials show Debt/Equity; banks (where D/E is n/a on stockanalysis) show Equity/Assets instead — different metric because "debt" isn't a meaningful concept for deposit-funded banks.
 function levFmt(d){
   if(d.de!=null) return d.de.toFixed(2)+"x D/E";
@@ -287,7 +287,7 @@ function matrixTbl(){
       <td>${d.t}</td><td>${d.name}</td><td>${d.sector}</td>
       <td>${mx(d.prof>2)} ${d.prof.toFixed(1)}x</td>
       <td>${mx(d.rev>2)} ${d.rev.toFixed(1)}x</td>
-      <td>${mx(d.pe<11)} ${d.pe.toFixed(2)}</td>
+      <td>${peCell(d)}</td>
       <td>${mx(d.pbv<1.5)} ${d.pbv.toFixed(2)}</td>
       <td>${d.exempt?"— exempt":mx(d.rdy>0.16)+" "+(d.rdy*100).toFixed(1)+"%"}</td>
       <td>${levFmt(d)}</td>
@@ -306,7 +306,7 @@ function watchMatrixTbl(){
       <td>${levFmt(d)}</td>
       <td>${mx(d.prof>2)} ${d.prof.toFixed(1)}x</td>
       <td>${mx(d.rev>2)} ${d.rev.toFixed(1)}x</td>
-      <td>${mx(d.pe<11)} ${d.pe.toFixed(2)}</td>
+      <td>${peCell(d)}</td>
       <td>${mx(d.pbv<1.5)} ${d.pbv.toFixed(2)}</td>
       <td>${d.exempt?"— exempt":mx(d.rdy>0.16)+" "+(d.rdy*100).toFixed(1)+"%"}</td>
       <td>${mx(d.belowMkt)}</td>
@@ -317,13 +317,13 @@ function watchMatrixTbl(){
   const fails=W.filter(d=>!d.q);
   document.getElementById("watchNote").textContent=fails.length?
     "Fails: "+fails.map(d=>{const r=[];
-      if(d.pe>=11)r.push("PE "+d.pe.toFixed(2));
+      if(d.pe==null)r.push("Loss (no PE)");else if(d.pe>=11)r.push("PE "+d.pe.toFixed(2));
       if(d.pbv>=1.5)r.push("PBV "+d.pbv.toFixed(2));
       if(!d.exempt&&d.rdy<=0.16)r.push("ROE+DY "+(d.rdy*100).toFixed(1)+"%");
       if(d.prof<=2)r.push("Profit "+d.prof.toFixed(1)+"x");
       if(d.rev<=2)r.push("Revenue "+d.rev.toFixed(1)+"x");
       return d.t+" ("+r.join(", ")+")";}).join(" · ")
-    :"All 4 watchlist companies currently qualify.";
+    :`All ${W.length} watchlist companies currently qualify.`;
 }
 function constraints(){
   const qualifiers=D.filter(d=>d.q);
@@ -359,7 +359,7 @@ function tbl(){
     return `<tr>
       <td>${d.t}</td><td>${d.name}</td><td>${d.sector}</td>
       <td>${d.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
-      <td>${fc(d.pe.toFixed(2),d.pe>=11)}</td>
+      <td>${fc(peText(d),d.pe==null||d.pe>=11)}</td>
       <td>${fc(d.pbv.toFixed(2),d.pbv>=1.5)}</td>
       <td>${(d.dy*100).toFixed(1)}%</td>
       <td>${(d.roe*100).toFixed(1)}%</td>
@@ -371,7 +371,8 @@ function tbl(){
   document.querySelector("#tbl tbody").innerHTML=rows;
   const fails=D.filter(d=>!d.q);
   document.getElementById("note").textContent="Fails: "+fails.map(d=>{
-    const r=[];if(d.pbv>=1.5)r.push("PBV "+d.pbv.toFixed(2));if(d.pe>=11)r.push("PE "+d.pe.toFixed(2));
+    const r=[];if(d.pbv>=1.5)r.push("PBV "+d.pbv.toFixed(2));
+    if(d.pe==null)r.push("Loss (no PE)");else if(d.pe>=11)r.push("PE "+d.pe.toFixed(2));
     return d.t+" ("+r.join(", ")+")";}).join(" · ");
 }
 const GREEN="#0ca30c",RED="#d03b3b",MUTED="#898781";
@@ -384,7 +385,7 @@ const lbl=(fmt)=>({id:"lbl",afterDatasetsDraw(c){const{ctx}=c;ctx.save();ctx.fil
 
 let scatterC,barC,growthC;
 function scatter(){
-  const data=shown().map(d=>({x:d.pe,y:d.pbv,t:d.t,c:col(d)}));
+  const data=shown().filter(d=>d.pe!=null).map(d=>({x:d.pe,y:d.pbv,t:d.t,c:col(d)})); // loss-making companies (null pe) have no meaningful PE to plot
   if(scatterC)scatterC.destroy();
   scatterC=new Chart(document.getElementById("scatter"),{type:"scatter",
    data:{datasets:[{data,pointBackgroundColor:data.map(p=>p.c),pointRadius:7,pointHoverRadius:9}]},
