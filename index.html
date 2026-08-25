@@ -133,7 +133,7 @@ tbody tr:hover{background:var(--surface1)}
 
   <div class="panel">
     <h2>Companies to consider</h2>
-    <p class="h-sub">Watchlist, not yet part of the 15-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above. 16 names: KCAB, VLL, CCS, PLR, CDB (prior) + SOY, VFIN, HASU, DIPD, GRAN, ASIR, ETWO, HHL, VONE, LOFC, AEL (added 2026-07-20 from Watch List Companies.md; last-traded price direct from CSE cse.lk API, EPS/DPS/NAV from stockanalysis.com &amp; Company Analysis). OSEA and VPEL moved into the held portfolio above on 2026-08-20 after purchase.</p>
+    <p class="h-sub">Watchlist, not yet part of the 15-company portfolio universe — same section&nbsp;4 criteria, screened for reference only. Not counted in the portfolio constraints above. 23 names: KCAB, VLL, CCS, PLR, CDB (prior) + SOY, VFIN, HASU, DIPD, GRAN, ASIR, ETWO, HHL, VONE, LOFC, AEL (added 2026-07-20 from Watch List Companies.md) + DFCC, JINS, CFIN, RCL, CHMX, DIMO, TYRE (added 2026-08-21, sourced from screening Company Analysis.md for PBV&lt;1 with rising profit growth; last-traded price direct from CSE cse.lk API, EPS/DPS/NAV from stockanalysis.com &amp; Company Analysis). OSEA and VPEL moved into the held portfolio above on 2026-08-20 after purchase. Note: JINS's 10-yr ROE/growth figures are from a workbook snapshot that appears to pre-date a large share-count change at the company (live EPS/NAV are far below the workbook's) — treat its ROE+DY pass with caution until re-verified.</p>
     <div style="overflow-x:auto">
       <table class="matrix" id="watchMatrixTbl">
         <thead><tr>
@@ -187,21 +187,21 @@ tbody tr:hover{background:var(--surface1)}
 
 <script>
 const RAW=[
- ["AAIC","Softlogic Life","Insurance",82.3,15.39,44.25,4.5,0.29,7.8,4.84,false,null,0.1843],
- ["CALT","Capital Alliance","Financials",49.1,-6.73,25.24,16.0,0.52,8.2,4.5,false,null,0.1200],
- ["CIC","CIC Holdings","Materials",29.3,3.79,25.26,0.5,0.152,2.85,3.0,false,0.52,null],
- ["CIND","Central Industries","Capital Goods",212.0,28.86,203.86,6.0,0.174,2.7,4.7,false,null,null],
- ["CINS","Ceylinco Holdings","Insurance",2850.0,390.36,4109.17,51.0,0.1444,2.5,2.37,false,null,0.2840],
- ["COMB","Commercial Bank","Banks",203.25,38.58,216.14,7.93,0.156,3.8,4.0,false,null,0.0973],
- ["HAYC","Haycarb","Materials",175.0,14.14,103.93,4.07,0.159,5.0,4.5,false,0.59,null],
- ["LFIN","LB Finance","Financials",156.75,27.10,113.52,8.2,0.2686,3.1,3.48,false,null,0.1418],
- ["LIOC","Lanka IOC","Energy",133.5,18.35,175.73,5.0,0.20,3.0,27.0,false,0.05,null],
- ["NDB","National Development Bank","Banks",112.0,33.63,199.00,6.38,0.1179,3.0,4.2,false,null,0.0914],
- ["OSEA","Overseas Realty","Real Estate",50.9,6.82,54.67,1.75,0.096,4.3,3.0,false,0.15,null],
- ["SAMP","Sampath Bank","Banks",139.5,29.67,166.78,10.3,0.152,3.2,3.3,false,null,0.0875],
- ["SPEN","Aitken Spence","Diversified",141.5,19.02,223.84,4.0,0.073,2.1,2.3,true,0.86,null],
- ["TILE","Lanka Tiles","Capital Goods",42.8,4.45,60.72,1.7,0.173,2.8,3.3,false,0.07,null],
- ["VPEL","Vallibel Power Erathna","Energy",15.1,1.73,4.64,0.6,0.28,1.78,2.6,false,0.37,null],
+ ["AAIC","Softlogic Life","Insurance",82.1,15.55,46.11,4.5,0.29,7.8,4.84,false,null,0.1788],
+ ["CALT","Capital Alliance","Financials",48.7,-6.73,25.23,16.0,0.52,8.2,4.5,false,null,0.1200],
+ ["CIC","CIC Holdings","Materials",29.4,3.79,25.26,0.5,0.152,2.85,3.0,false,0.52,null],
+ ["CIND","Central Industries","Capital Goods",209.5,28.86,203.86,6.0,0.174,2.7,4.7,false,null,null],
+ ["CINS","Ceylinco Holdings","Insurance",2850.0,390.36,4109.05,51.0,0.1444,2.5,2.37,false,null,0.2840],
+ ["COMB","Commercial Bank","Banks",202.0,38.58,216.14,7.93,0.156,3.8,4.0,false,null,0.0973],
+ ["HAYC","Haycarb","Materials",185.75,14.14,103.93,4.07,0.159,5.0,4.5,false,0.59,null],
+ ["LFIN","LB Finance","Financials",156.25,27.10,113.52,8.2,0.2686,3.1,3.48,false,null,0.1418],
+ ["LIOC","Lanka IOC","Energy",131.0,18.35,175.73,5.0,0.20,3.0,27.0,false,0.05,null],
+ ["NDB","National Development Bank","Banks",111.5,33.63,199.00,6.38,0.1179,3.0,4.2,false,null,0.0914],
+ ["OSEA","Overseas Realty","Real Estate",50.8,6.82,54.67,1.75,0.096,4.3,3.0,false,0.15,null],
+ ["SAMP","Sampath Bank","Banks",139.75,29.67,166.78,10.3,0.152,3.2,3.3,false,null,0.0875],
+ ["SPEN","Aitken Spence","Diversified",140.0,19.02,223.61,4.0,0.073,2.1,2.3,true,0.86,null],
+ ["TILE","Lanka Tiles","Capital Goods",42.5,4.86,61.44,1.7,0.173,2.8,3.3,false,0.07,null],
+ ["VPEL","Vallibel Power Erathna","Energy",15.3,1.73,4.70,0.6,0.28,1.78,2.6,false,0.37,null],
 ];
 // Market PE/PBV and GICS-sector PE/PBV from the CSE Daily Market Publication, as recorded per sheet in Company Analysis.xlsx
 const SECTOR_BENCH={
@@ -215,6 +215,8 @@ const SECTOR_BENCH={
  "Utilities":{mktPE:11.81,mktPBV:1.38,gicsPE:21.09,gicsPBV:2.38},
  "Food & Beverage":{mktPE:11.8,mktPBV:1.38,gicsPE:15.39,gicsPBV:2.15},
  "Health Care":{mktPE:11.44,mktPBV:1.34,gicsPE:11.42,gicsPBV:1.62},
+ "Retail":{mktPE:11.8,mktPBV:1.38,gicsPE:10.93,gicsPBV:1.90},
+ "Auto Mobile":{mktPE:11.81,mktPBV:1.38,gicsPE:14.72,gicsPBV:0.92},
 };
 SECTOR_BENCH["Diversified"]=SECTOR_BENCH["Capital Goods"]; // SPEN: CSE GICS lists Aitken Spence under Capital Goods
 const PERERA_GROUP=new Set(["HAYC","LFIN","TILE","SAMP","VPEL"]); // Dhammika Perera / Vallibel-Hayleys cluster (SAMP = his largest single holding; VPEL = Vallibel Power Erathna)
@@ -230,22 +232,29 @@ function mapRows(raw){return raw.map(r=>{const[t,name,sector,price,eps,nav,dps,r
   return{t,name,sector,price,eps,nav,dps,roe,rev,prof,exempt,de,eqa,pe,pbv,dy,rdy,q,bench,belowMkt,belowSector,perera};});}
 
 const WATCH_RAW=[
- ["KCAB","Kelani Cables","Capital Goods",99.3,11.25,73.21,1.5,0.1711,2.67,4.6,false,0.05,null],
- ["VLL","Vidullanka","Utilities",20.9,1.70,9.95,0.65,0.16,7.5,4.2,false,0.67,null],
- ["CCS","Ceylon Cold Stores","Food & Beverage",125.25,8.27,23.77,7.03,0.183,4.4,2.2,false,1.52,null],
- ["PLR","Prime Lands","Real Estate",42.1,2.47,12.10,0.8,0.206,1.2,1.2,false,0.75,null],
- ["CDB","Citizens Dev. Business Finance","Financials",37.5,6.37,40.60,1.75,0.178,3.5,4.47,false,null,0.1281],
+ ["KCAB","Kelani Cables","Capital Goods",97.0,11.25,73.21,1.5,0.1711,2.67,4.6,false,0.05,null],
+ ["VLL","Vidullanka","Utilities",20.5,1.70,9.95,0.50,0.16,7.5,4.2,false,0.67,null],
+ ["CCS","Ceylon Cold Stores","Food & Beverage",121.0,8.27,23.77,7.03,0.183,4.4,2.2,false,1.52,null],
+ ["PLR","Prime Lands","Real Estate",41.6,2.47,12.10,0.8,0.206,1.2,1.2,false,0.75,null],
+ ["CDB","Citizens Dev. Business Finance","Financials",39.8,6.37,40.60,1.75,0.178,3.5,4.47,false,null,0.1281],
  ["SOY","Convenience Foods (Lanka)","Food & Beverage",2100.0,264.58,1506.78,8.0,0.174,4.13,6.8,false,0.03,null],
- ["VFIN","Vallibel Finance","Financials",93.8,15.04,83.69,2.75,0.213,5.15,5.0,false,null,0.1133],
- ["HASU","HNB Life (HNB Assurance)","Insurance",149.25,16.39,88.10,5.0,0.191,4.57,3.68,false,null,0.1521],
- ["DIPD","Dipped Products","Materials",57.4,6.47,59.84,2.13,0.150,3.37,4.6,false,0.45,null],
- ["GRAN","Ceylon Grain Elevators","Food & Beverage",480.0,63.49,261.92,15.0,0.185,2.0,4.3,false,0.04,null],
- ["ASIR","Asiri Hospital Holdings","Health Care",32.5,4.39,22.40,0.0,0.14,3.1,1.39,false,0.67,null],
- ["ETWO","Equity Two","Real Estate",60.9,9.07,65.69,4.41,0.103,2.0,4.87,false,null,null],
- ["HHL","Hemas Holdings","Capital Goods",31.4,2.87,18.62,0.95,0.129,2.93,2.55,false,0.21,null],
- ["VONE","Vallibel One","Diversified",90.9,12.43,109.23,3.0,0.118,2.8,4.5,false,2.22,null],
- ["LOFC","LOLC Finance","Financials",5.1,0.89,5.44,0.0,0.198,6.3,17.6,false,null,0.2732],
- ["AEL","Access Engineering","Capital Goods",75.8,7.92,41.95,2.0,0.117,2.0,2.5,false,1.01,null],
+ ["VFIN","Vallibel Finance","Financials",92.0,15.04,83.69,2.75,0.213,5.15,5.0,false,null,0.1133],
+ ["HASU","HNB Life (HNB Assurance)","Insurance",149.5,16.39,88.10,5.0,0.191,4.57,3.68,false,null,0.1521],
+ ["DIPD","Dipped Products","Materials",57.2,6.47,59.84,2.13,0.150,3.37,4.6,false,0.45,null],
+ ["GRAN","Ceylon Grain Elevators","Food & Beverage",486.0,63.49,261.92,15.0,0.185,2.0,4.3,false,0.04,null],
+ ["ASIR","Asiri Hospital Holdings","Health Care",32.0,4.39,22.40,0.0,0.14,3.1,1.39,false,0.67,null],
+ ["ETWO","Equity Two","Real Estate",59.1,9.07,65.42,4.41,0.103,2.0,4.87,false,null,null],
+ ["HHL","Hemas Holdings","Capital Goods",31.5,2.87,18.62,0.95,0.129,2.93,2.55,false,0.21,null],
+ ["VONE","Vallibel One","Diversified",91.0,12.28,109.55,3.0,0.118,2.8,4.5,false,2.22,null],
+ ["LOFC","LOLC Finance","Financials",5.0,0.89,5.44,0.0,0.198,6.3,17.6,false,null,0.2732],
+ ["AEL","Access Engineering","Capital Goods",75.3,7.92,41.95,2.0,0.117,2.0,2.5,false,1.01,null],
+ ["DFCC","DFCC Bank","Banks",128.79,21.50,242.62,2.43,0.0976,3.6,3.4,false,null,0.1195],
+ ["JINS","Janashakthi Insurance","Insurance",42.18,3.35,24.68,5.00,0.164,3.26,3.6,false,null,0.4076],
+ ["CFIN","Central Finance","Financials",226.75,46.37,379.90,6.50,0.13,1.6,2.23,false,null,0.4955],
+ ["RCL","Royal Ceramics Lanka","Capital Goods",44.93,6.87,50.56,2.00,0.164,4.9,2.28,false,0.38,null],
+ ["CHMX","Chemanex","Materials",173.22,12.61,284.74,2.50,0.056,1.3,2.3,false,0.04,null],
+ ["DIMO","Diesel & Motor Engineering","Retail",1390.08,206.55,1803.50,50.00,0.026,2.3,2.4,false,2.92,null],
+ ["TYRE","Kelani Tyres","Auto Mobile",93.00,8.54,95.50,6.50,0.17,3.8,7.0,false,0.00,null],
 ];
 
 const D=mapRows(RAW);
@@ -261,7 +270,7 @@ function cards(){
 }
 function freshness(){
   document.getElementById("freshness").innerHTML=
-    "<strong>Last data refresh:</strong> 2026-08-20 (live last-traded price direct from CSE cse.lk API; EPS/DPS/NAV from stockanalysis.com; PE/PBV/DY recomputed from the CSE price; 10-yr ROE &amp; growth from Company Analysis) &middot; "+
+    "<strong>Last data refresh:</strong> 2026-08-25 (live last-traded price direct from CSE cse.lk API; EPS/DPS/NAV from stockanalysis.com; PE/PBV/DY recomputed from the CSE price; 10-yr ROE &amp; growth from Company Analysis) &middot; "+
     "<strong>Next refresh:</strong> Mondays &amp; Thursdays 2pm (auto; catch-up Tue/Fri if missed).";
 }
 function mx(ok,warn){return `<span class="mx ${warn?'warn-cell':(ok?'pass-cell':'fail-cell')}">${ok?"✓":"✗"}</span>`;}
